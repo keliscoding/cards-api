@@ -28,6 +28,9 @@ services:
       SPRING.DATASOURCE.USERNAME: admin
       SPRING.DATASOURCE.PASSWORD: admin
       SPRING.JPA.HIBERNATE.DDL_AUTO: none
+      SPRING.FLYWAY.URL: jdbc:mysql://db:3306/cardsapi?useTimezone=true&serverTimezone=America/Sao_Paulo
+      SPRING.FLYWAY.USERNAME: admin
+      SPRING.FLYWAY.PASSWORD: admin
     ports:
       - "8081:8081"
     command: mvn spring-boot:run
