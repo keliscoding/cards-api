@@ -1,0 +1,40 @@
+version: '3.3'
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    container_name: cardsapi_db
+    environment:
+      MYSQL_DATABASE: cardsapi
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    command: --init-file /data/application/init.sql
+    volumes:
+      - ./data:/var/lib/mysql
+      - .docker/init.sql:/data/application/init.sql
+    networks:
+      - cards-api-network
+  app:
+    image: cardsapi:latest
+    restart: always
+    build: .
+    container_name: cardsapi_app
+    working_dir: /cards-api
+    environment:
+      SPRING.DATASOURCE.URL: jdbc:mysql://db:3306/cardsapi?useTimezone=true&serverTimezone=America/Sao_Paulo
+      SPRING.DATASOURCE.USERNAME: admin
+      SPRING.DATASOURCE.PASSWORD: admin
+      SPRING.JPA.HIBERNATE.DDL_AUTO: none
+    ports:
+      - "8081:8081"
+    command: mvn spring-boot:run
+    depends_on:
+      - db
+    networks:
+      - cards-api-network
+networks:
+  cards-api-network:
+    driver: bridge
